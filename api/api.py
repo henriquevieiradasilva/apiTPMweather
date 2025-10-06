@@ -48,7 +48,6 @@ def prever_post():
     except Exception as e:
         return jsonify({'erro': str(e)}), 500
 
-# GET para testar direto no navegador
 @app.route('/prever', methods=['GET'])
 def prever_get():
     data = request.args.get('data')
@@ -56,27 +55,21 @@ def prever_get():
     lon = float(request.args.get('lon', -47.2100151415641))
 
     if not data:
-        return jsonify({'erro': 'Parametro "data" é obrigatório. Use formato YYYY-MM-DD.'}), 400
+        return jsonify({'erro': 'Parametro "data" é obrigatório.'}), 400
 
-    try:
-        previsao = prever_data_futura(
-            data_futura_str=data,
-            lat=lat,
-            lon=lon,
-            alvos=["T2M", "PRECTOTCORR", "RH2M", "WS2M"]
-        )
-        resultado = {
-            'data': data,
-            'lat': lat,
-            'lon': lon,
-            'temperatura': previsao.get('Temperatura (°C)'),
-            'precipitacao': previsao.get('Precipitação (mm)'),
-            'umidade': previsao.get('Umidade (%)'),
-            'vento': previsao.get('Vento (m/s)')
-        }
-        return jsonify(resultado)
-    except Exception as e:
-        return jsonify({'erro': str(e)}), 500
+    # fallback de teste
+    resultado = {
+        'data': data,
+        'lat': lat,
+        'lon': lon,
+        'temperatura': 25.0,
+        'precipitacao': 0.0,
+        'umidade': 60,
+        'vento': 3.0
+    }
+    return jsonify(resultado)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
+
