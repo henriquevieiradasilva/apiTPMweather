@@ -3,12 +3,17 @@ from flask_cors import CORS  # <--- import
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'ml')))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'ml'))
+
 from weather_model import prever_data_futura
 
 app = Flask(__name__)
 CORS(app)  # <--- habilita CORS para todos os domínios
 
+@app.route('/healthz')
+def health():
+    return "ok", 200
+    
 @app.route('/prever', methods=['POST'])
 def prever():
     data_json = request.get_json()  
@@ -44,3 +49,4 @@ def prever():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
+
